@@ -12,72 +12,6 @@ import shutil
 
 # read .npy file
 
-a = {
-    'data_path': '/home/eventcamera/data/dataset/test_klt_200_fast/vicon_data/',
-    'json_path_camera_sys': '/home/eventcamera/data/dataset/test_klt_200_fast/vicon_data/event_cam_sys.json',
-    'json_path_object': '/home/eventcamera/data/dataset/test_klt_200_fast/vicon_data/object1.json',
-    'json_path_event_cam_left': '/home/eventcamera/data/dataset/test_klt_200_fast/event_cam_left/e2calib/',
-    'json_path_event_cam_right': '/home/eventcamera/data/dataset/test_klt_200_fast/event_cam_right/e2calib/',
-    'rgb_image_path': '/home/eventcamera/data/dataset/test_klt_200_fast/rgb/',
-    "obj_path": '/home/eventcamera/data/KLT/obj_000003.ply',
-    "output_dir": '/home/eventcamera/data/dataset/test_klt_200_fast/annotation/'
-}
-
-b = {
-    'data_path': '/home/eventcamera/data/dataset/ciatronic_200_crane/vicon_data/',
-    'json_path_camera_sys': '/home/eventcamera/data/dataset/ciatronic_200_crane/vicon_data/event_cam_sys.json',
-    'json_path_object': '/home/eventcamera/data/dataset/ciatronic_200_crane/vicon_data/object1.json',
-    'json_path_event_cam_left': '/home/eventcamera/data/dataset/ciatronic_200_crane/event_cam_left_220/e2calib/',
-    'json_path_event_cam_right': '/home/eventcamera/data/dataset/ciatronic_200_crane/event_cam_right_220/e2calib/',
-    'rgb_image_path': '/home/eventcamera/data/dataset/ciatronic_200_crane/rgb/',
-    "obj_path": '/home/eventcamera/data/KLT/obj_000010.ply',
-    "output_dir": '/home/eventcamera/data/dataset/ciatronic_200_crane/annotation/'
-}
-
-c = {
-    'data_path': '/home/eventcamera/data/dataset/human_200_normal/vicon_data/',
-    'json_path_camera_sys': '/home/eventcamera/data/dataset/human_200_normal/vicon_data/event_cam_sys.json',
-    'json_path_object': '/home/eventcamera/data/dataset/human_200_normal/vicon_data/object1.json',
-    'json_path_event_cam_left': '/home/eventcamera/data/dataset/human_200_normal/event_cam_left/e2calib/',
-    'json_path_event_cam_right': '/home/eventcamera/data/dataset/human_200_normal/event_cam_right/e2calib/',
-    'rgb_image_path': '/home/eventcamera/data/dataset/human_200_normal/rgb/',
-    "obj_path": '/home/eventcamera/data/KLT/cuboid.ply',
-    "output_dir": '/home/eventcamera/data/dataset/human_200_normal/annotation/'
-}
-
-d = {
-    'data_path': '/home/eventcamera/data/dataset/human_200_fast_jerky/vicon_data/',
-    'json_path_camera_sys': '/home/eventcamera/data/dataset/human_200_fast_jerky/vicon_data/event_cam_sys.json',
-    'json_path_object': '/home/eventcamera/data/dataset/human_200_fast_jerky/vicon_data/object1.json',
-    'json_path_event_cam_left': '/home/eventcamera/data/dataset/human_200_fast_jerky/event_cam_left/e2calib/',
-    'json_path_event_cam_right': '/home/eventcamera/data/dataset/human_200_fast_jerky/event_cam_right/e2calib/',
-    'rgb_image_path': '/home/eventcamera/data/dataset/human_200_fast_jerky/rgb/',
-    "obj_path": '/home/eventcamera/data/KLT/cuboid.ply',
-    "output_dir": '/home/eventcamera/data/dataset/human_200_fast_jerky/annotation/'
-}
-
-e = {
-    'data_path': '/home/eventcamera/data/dataset/klt_1/vicon_data/',
-    'json_path_camera_sys': '/home/eventcamera/data/dataset/klt_1/vicon_data/event_cam_sys.json',
-    'json_path_object': '/home/eventcamera/data/dataset/klt_1/vicon_data/object1.json',
-    'json_path_event_cam_left': '/home/eventcamera/data/dataset/klt_1/event_cam_left/e2calib/',
-    'json_path_event_cam_right': '/home/eventcamera/data/dataset/klt_1/event_cam_right/e2calib/',
-    'rgb_image_path': '/home/eventcamera/data/dataset/klt_1/rgb/',
-    "obj_path": '/home/eventcamera/data/KLT/obj_000003.ply',
-    "output_dir": '/home/eventcamera/data/dataset/klt_1/annotation/'
-}
-
-f = {
-    'data_path': '/home/eventcamera/data/dataset/klt_2/vicon_data/',
-    'json_path_camera_sys': '/home/eventcamera/data/dataset/klt_2/vicon_data/event_cam_sys.json',
-    'json_path_object': '/home/eventcamera/data/dataset/klt_2/vicon_data/object1.json',
-    'json_path_event_cam_left': '/home/eventcamera/data/dataset/klt_2/event_cam_left/e2calib/',
-    'json_path_event_cam_right': '/home/eventcamera/data/dataset/klt_2/event_cam_right/e2calib/',
-    'rgb_image_path': '/home/eventcamera/data/dataset/klt_2/rgb/',
-    "obj_path": '/home/eventcamera/data/KLT/obj_000003.ply',
-    "output_dir": '/home/eventcamera/data/dataset/klt_2/annotation/'
-}
-
 g = {
     'data_path': '/home/eventcamera/data/dataset/Jul22/zivid_markers/vicon_data/',
     'json_path_camera_sys': '/home/eventcamera/data/dataset/Jul22/zivid_markers/vicon_data/event_cam_sys.json',
@@ -230,18 +164,6 @@ quat_cam1_cam0 = [-0.00916228, -0.04119687, 0.0005243, 0.9991089]
 R_cam1_cam0 = R.from_quat(quat_cam1_cam0).as_matrix()
 
 # Transformation matrix from camera 1 to camera 0
-'''
-H_cam1_2_rgb = np.array([[0.9971993087878418, 0.0005258497031806043, 0.07478811426377688, 0.053269788085482585],
-                       [0.0006902602101232752, 0.9998679823207766, -0.016233960410603578, 0.009952490862473908],
-                       [-0.07478677753376195, 0.016240117359809583, 0.99706729787625, -0.04082399413941046],
-                       [0.0, 0.0, 0.0, 1.0]])
-
-# Transformation matrix from camera 2 to camera 1
-H_cam2_cam1 = np.array([[0.9999312261471128, -0.00039260427945142073, 0.011721298468554263, -0.10223038360927061],
-                        [0.00039304051036216355, 0.9999999221500911, -3.491341559211893e-05, 0.00027606541625718685],
-                        [-0.011721283848896005, 3.9517959594199465e-05, 0.9999313026119555, 0.005272335654555953],
-                        [0.0, 0.0, 0.0, 1.0]])
-'''
 H_cam1_2_rgb = np.array([[0.9988487792874476, 0.0047032240817731635, 0.04773882905149164, 0.05547200068236508],
                          [-0.00480866672973969, 0.9999862455691012, 0.0020941339237770754, 0.004239383045238393],
                          [-0.04772832324996561, -0.0023212832324058085, 0.9988576569281016, 0.007983029405103982],
@@ -348,65 +270,7 @@ for i, v in data.items():
 with open('/home/eventcamera/data/transformations/transformations.json', 'w') as json_file:
     json.dump(transformations, json_file, indent=2)
 print('saved transformations data')
-'''
-projections_cam = {}
 
-# Transforms all point in vicon coordinates to camera optical or rgb frame
-#for k,v in translations_with_timestamps.items():
-for k, v in object_array.items():
-    H_v_2_point = np.array([
-        #[1, 0, 0, v[0]],
-        [1, 0, 0, v['translation'][0]],
-        [0, 1, 0, v['translation'][1]],
-        [0, 0, 1, v['translation'][2]],
-        [0, 0, 0, 1]])
-    H_cam_optical_2_base = transformations[str(k)]['H_cam_optical_2_base']
-    H_base_2_cam_vicon = transformations[str(k)]['H_base_2_cam_vicon']
-    H_cam_optical_2_point = np.matmul(H_cam_optical_2_base, H_v_2_point)
-    t_cam_optical_2_point = H_cam_optical_2_point[:3, 3]
-    #print(t_cam_optical_2_point)
-    # points_2d = cv2.projectPoints(t_cam_optical_2_point, np.eye(3), np.zeros(3), camera_matrix, distortion_coefficients)
-    #points_2d = np.round(points_2d[0]).astype(int)
-    #print(points_2d)
-    # Display the 2d points on the image
-    #img_test = cv2.circle(img_test, tuple(points_2d[0][0]), 10, (255, 0, 0), -1)
-
-    #cv2.imshow('img', cv2.resize(img_test, (0, 0), fx=0.5, fy=0.5))  # resize image to 0.5 for display
-    #cv2.waitKey(0)
-    H_base_2_cam_optical = np.matmul(H_base_2_cam_vicon, H_cam_vicon_2_cam_optical)
-    # invert H_vicon_2_cam_optical to get H_cam_optical_2_vicon
-    H_cam_optical_2_base = np.eye(4)
-    H_cam_optical_2_base[:3, :3] = np.transpose(H_base_2_cam_optical[:3, :3])
-    H_cam_optical_2_base[:3, 3] = -np.matmul(np.transpose(H_base_2_cam_optical[:3, :3]), H_base_2_cam_optical[:3, 3])
-    # Compute translation t_cam_optical_2_base
-    t_cam_optical_2_base = H_cam_optical_2_base[:3, 3]
-    #t_cam_optical_2_base = np.transpose(H_base_2_cam_optical[:3, :3])
-    H_rgb_2_point = H_cam_optical_2_point
-    # project point (x,y,z) in cam0 coordinate to cam1 coordinate
-    point_cam0 = np.array([
-        [1, 0, 0, t_cam_optical_2_base[0]],
-        [0, 1, 0, t_cam_optical_2_base[1]],
-        [0, 0, 1, t_cam_optical_2_base[2]],
-        [0, 0, 0, 1]])
-
-    H_cam1_2_point = np.matmul(H_cam1_2_rgb, H_rgb_2_point)
-    t_cam1_2_point = H_cam1_2_point[:3, 3]
-    #print(point_cam1)
-    # project point (863,819) in cam1 coordinate to cam2 coordinate
-    H_cam2_2_point = np.matmul(H_cam2_cam1, H_cam1_2_point)
-    t_cam2_2_point = H_cam2_2_point[:3, 3]
-    # point_cam2 = np.matmul(H_cam2_cam1, point_cam1)
-    #print(point_cam2)
-    projections_cam[str(v['timestamp'])] = {'t_cam_optical_2_point': t_cam_optical_2_point.tolist(),
-                                            't_cam_optical_2_base': t_cam_optical_2_base.tolist(),
-                                            'point_event_cam_left': t_cam1_2_point.tolist(),
-                                            'point_event_cam_right': t_cam2_2_point.tolist(),
-                                            'timestamp': str(v['timestamp'])}
-
-with open('/home/eventcamera/data/transformations/projections_cam.json', 'w') as json_file:
-    json.dump(projections_cam, json_file, indent=2)
-print('saved projection data')
-'''
 count = 0
 with open('/home/eventcamera/data/transformations/transformations.json', 'r') as file:
     projected_point_rgb_ec1_ec2 = json.load(file)
@@ -421,9 +285,7 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
     print(kr)
     rgb_t = rgb_timestamp[count]
     ec_left = timestamp_closest_ec_left[count]
-    #ec_left = timestamp_closest_ec_left_vicon[count]
     ec_right = timestamp_closest_ec_right[count]
-    #ec_right = timestamp_closest_ec_right_vicon[count]
     rgb_img_path = selected_path['rgb_image_path'] + str(rgb_t) + ".png"
     event_cam_left = selected_path['json_path_event_cam_left'] + str(ec_left) + ".png"
     event_cam_right = selected_path['json_path_event_cam_right'] + str(ec_right) + ".png"
@@ -488,9 +350,6 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
         vertices -= translation_vector
         points_3d -= translation_vector
 
-    #points_3d = np.dot(points_3d, R.from_euler('z', 90, degrees=True).as_matrix())
-    #vertices = np.dot(vertices, R.from_euler('z', 90, degrees=True).as_matrix())
-
     klt_3d_transform_points = np.matmul(H_cam_optical_2_point, np.vstack((points_3d.T, np.ones(points_3d.shape[0]))))[:3, :].T
     klt_3d_transform_vertices = np.matmul(H_cam_optical_2_point, np.vstack((vertices.T, np.ones(vertices.shape[0]))))[:3, :].T
     center_3d = np.mean(klt_3d_transform_points, axis=0)
@@ -501,14 +360,8 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
     ymax = np.max(klt_3d_transform_points[:, 1])
     zmin = np.min(klt_3d_transform_points[:, 2])
     zmax = np.max(klt_3d_transform_points[:, 2])
-    # Save above values an array
     Bbox = np.array([xmin, xmax, ymin, ymax, zmin, zmax])
-    # append Bbox array to a temp array
 
-
-    # save bounding box values to dictionary
-    #bounding_box = {'bounding_box': Bbox.tolist()}
-    # append the Bbox values to a json file row wise
     file = os.path.join(output_dir, "bounding_box_labels.json")
     with open(file, 'a') as json_file:
         json.dump(Bbox.tolist(), json_file)
@@ -537,24 +390,7 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
     for point in klt_2d_vertices:
         img_test = cv2.circle(img_test, tuple(point[0].astype(int)), 8, (0, 0, 255), -1)
     img_test = cv2.circle(img_test, tuple(center_2d.astype(int)), 8, (0, 0, 255), -1)
-   # cv2.imshow('img', cv2.resize(img_test, (0, 0), fx=0.5, fy=0.5))
-   # cv2.waitKey(0)
 
-    #H_cam_optical_2_base = np.eye(4)
-    #H_cam_optical_2_base[:3, :3] = np.transpose(H_base_2_cam_optical[:3, :3])
-    #H_cam_optical_2_base[:3, 3] = -np.matmul(np.transpose(H_base_2_cam_optical[:3, :3]), H_base_2_cam_optical[:3, 3])
-    # Compute translation t_cam_optical_2_base
-    #t_cam_optical_2_base = H_cam_optical_2_base[:3, 3]
-    #H_rgb_2_point = H_cam_optical_2_point
-    # project point (x,y,z) in cam0 coordinate to cam1 coordinate
-    #point_cam0 = np.array([
-    #    [1, 0, 0, t_cam_optical_2_base[0]],
-    #    [0, 1, 0, t_cam_optical_2_base[1]],
-    #    [0, 0, 1, t_cam_optical_2_base[2]],
-    #    [0, 0, 0, 1]])
-
-    #H_cam1_2_point = np.matmul(H_cam1_2_rgb, H_rgb_2_point)
-    #t_cam1_2_point = H_cam1_2_point[:3, 3]
     t_cam1_2_point = np.array(projected_point_rgb_ec1_ec2[str(k)]['point_event_cam_left'])
     H_cam1_2_point = np.eye(4)
     H_cam1_2_point[:3, :3] = rotation
@@ -582,19 +418,10 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
     for point in klt_2d_vertices:
         img_test1 = cv2.circle(img_test1, tuple(point[0].astype(int)), 3, (0, 0, 255), -1)
 
-   # cv2.imshow('img', img_test1)  # resize image to 0.5 for display
-   # cv2.waitKey(0)
-
-    # print(point_cam1)
-    # project point (863,819) in cam1 coordinate to cam2 coordinate
-    #H_cam2_2_point = np.matmul(H_cam2_cam1, H_cam1_2_point)
-    #t_cam2_2_point = H_cam2_2_point[:3, 3]
     t_cam2_2_point = np.array(projected_point_rgb_ec1_ec2[str(k)]['point_event_cam_right'])
     H_cam2_2_point = np.eye(4)
     H_cam2_2_point[:3, :3] = rotation
     H_cam2_2_point[:3, 3] = t_cam2_2_point
-    # point_cam2 = np.matmul(H_cam2_cam1, point_cam1)
-    # print(point_cam2)
 
     points_2d_cam2 = cv2.projectPoints(np.array([t_cam2_2_point]), np.eye(3), np.zeros(3), camera_mtx_cam2,
                                        distortion_coeffs_cam2)
@@ -618,8 +445,6 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
         img_test2 = cv2.circle(img_test2, tuple(point[0].astype(int)), 1, (255, 255, 255), -1)
     for point in klt_2d_vertices:
         img_test2 = cv2.circle(img_test2, tuple(point[0].astype(int)), 3, (0, 0, 255), -1)
-
-   # cv2.imshow('img', img_test2)  # resize image to 0.5 for display
 
     img_test = cv2.resize(img_test, (568, 426))
     img_test1 = cv2.resize(img_test1, (568, 426))
