@@ -5,22 +5,20 @@ import cv2
 import os
 import json
 from scipy.spatial.transform import Rotation as R
-import matplotlib.pyplot as plt
 import trimesh
-import open3d as o3d
-import shutil
 
 # read .npy file
 
 g = {
-    'data_path': '/home/eventcamera/data/dataset/Jul22/zivid_markers/vicon_data/',
-    'json_path_camera_sys': '/home/eventcamera/data/dataset/Jul22/zivid_markers/vicon_data/event_cam_sys.json',
-    'json_path_object': '/home/eventcamera/data/dataset/Jul22/zivid_markers/vicon_data/object1.json',
-    'json_path_event_cam_left': '/home/eventcamera/data/dataset/Jul22/zivid_markers/event_cam_left/e2calib/',
-    'json_path_event_cam_right': '/home/eventcamera/data/dataset/Jul22/zivid_markers/event_cam_right/e2calib/',
-    'rgb_image_path': '/home/eventcamera/data/dataset/Jul22/zivid_markers/rgb/',
-    "obj_path": '/home/eventcamera/data/KLT/zivid.ply',
-    "output_dir": '/home/eventcamera/data/dataset/Jul22/zivid_markers/annotation/'
+    'data_path': '/home/eventcamera/data/dataset/Jul1/test_klt_2/vicon_data/',
+    'json_path_camera_sys': '/home/eventcamera/data/dataset/Jul1/test_klt_2/vicon_data/event_cam_sys.json',
+    'json_path_object': '/home/eventcamera/data/dataset/Jul1/test_klt_2/vicon_data/object1.json',
+    'json_path_event_cam_left': '/home/eventcamera/data/dataset/Jul1/test_klt_2/event_cam_left/e2calib/',
+    'json_path_event_cam_right': '/home/eventcamera/data/dataset/Jul1/test_klt_2/event_cam_right/e2calib/',
+    'rgb_image_path': '/home/eventcamera/data/dataset/Jul1/test_klt_2/rgb/',
+    "obj_path": '/home/eventcamera/data/KLT/obj_000003.ply',
+    "obj_name": "test_klt",
+    "output_dir": '/home/eventcamera/data/dataset/Jul1/test_klt_2/annotation/'
 }
 
 selected_path = g
@@ -123,9 +121,14 @@ rotations_with_timestamps = {
     timestamp: np.array(object_array[str(timestamp)]["rotation"])
     for timestamp in timestamps_closest_object
 }
-
-#vicon_coord.append(loaded_array[str(value)])
-
+'''
+# update the x and y coordinates of all translation in the dictionary by -1. Replace this values in object_array
+for key, value in translations_with_timestamps.items():
+    value[0] = value[0] + 0.0  #- 0.14
+    value[1] = value[1] - 0.03 #- 0.1
+    value[2] = value[2] - 0.05  #- 0.01
+    object_array[str(key)]["translation"] = value
+'''
 # Transformation matrix obtained from eye in hand calibration
 H_cam_vicon_2_cam_optical = np.array([[0.00563068, 0.03006136, 0.9995322, -0.05282819],
                                       [-0.99982796, -0.01749663, 0.00615856, 0.03674293],
@@ -200,8 +203,6 @@ for i, v in data.items():
     H_cam_optical_2_base = np.eye(4)
     H_cam_optical_2_base[:3, :3] = np.transpose(H_base_2_cam_optical[:3, :3])
     H_cam_optical_2_base[:3, 3] = -np.matmul(np.transpose(H_base_2_cam_optical[:3, :3]), H_base_2_cam_optical[:3, 3])
-    # Add H_cam_optical_2_base, timestamp to a dictionary. Append the H_cam_optical_2_base and timestamp on every iteration.
-    # This will give a list of dictionaries with H_cam_optical_2_base and timestamp
     t_x = object_array[str(v['timestamp'])]['translation'][0]
     t_y = object_array[str(v['timestamp'])]['translation'][1]
     t_z = object_array[str(v['timestamp'])]['translation'][2]
@@ -223,15 +224,6 @@ for i, v in data.items():
     H_cam_optical_2_point = np.matmul(H_cam_optical_2_base, H_v_2_point)
     t_cam_optical_2_point = H_cam_optical_2_point[:3, 3]
     r_cam_optical_2_point = H_cam_optical_2_point[:3, :3]
-    #print(t_cam_optical_2_point)
-    # points_2d = cv2.projectPoints(t_cam_optical_2_point, np.eye(3), np.zeros(3), camera_matrix, distortion_coefficients)
-    # points_2d = np.round(points_2d[0]).astype(int)
-    # print(points_2d)
-    # Display the 2d points on the image
-    # img_test = cv2.circle(img_test, tuple(points_2d[0][0]), 10, (255, 0, 0), -1)
-
-    # cv2.imshow('img', cv2.resize(img_test, (0, 0), fx=0.5, fy=0.5))  # resize image to 0.5 for display
-    # cv2.waitKey(0)
     H_base_2_cam_optical = np.matmul(H_base_2_cam_vicon, H_cam_vicon_2_cam_optical)
     # invert H_vicon_2_cam_optical to get H_cam_optical_2_vicon
     H_cam_optical_2_base = np.eye(4)
@@ -251,11 +243,8 @@ for i, v in data.items():
     H_cam1_2_point = np.matmul(H_cam1_2_rgb, H_rgb_2_point)
 
     t_cam1_2_point = H_cam1_2_point[:3, 3]
-    #print(t_cam1_2_point)
-    # project point (863,819) in cam1 coordinate to cam2 coordinate
     H_cam2_2_point = np.matmul(H_cam2_cam1, H_cam1_2_point)
     t_cam2_2_point = H_cam2_2_point[:3, 3]
-    #print(t_cam2_2_point)
     transformations[str(data[str(i)]['timestamp'])] = {'H_cam_optical_2_base': H_cam_optical_2_base.tolist(),
                                                        'H_cam_optical_2_point': H_cam_optical_2_point.tolist(),
                                                        'H_base_2_cam_vicon': H_base_2_cam_vicon.tolist(),
@@ -283,6 +272,7 @@ rgb_timestamp = sorted(rgb_timestamp)
 
 for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with_timestamps.items()):
     print(kr)
+    # for future frames just add to count
     rgb_t = rgb_timestamp[count]
     ec_left = timestamp_closest_ec_left[count]
     ec_right = timestamp_closest_ec_right[count]
@@ -298,9 +288,6 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
     t_cam_optical_2_point = np.array(projected_point_rgb_ec1_ec2[str(k)]['t_cam_optical_2_point'])
     H_cam_optical_2_point = np.array(projected_point_rgb_ec1_ec2[str(k)]['H_cam_optical_2_point'])
     rotation = H_cam_optical_2_point[:3, :3]
-    if selected_path == c or selected_path == d:
-        rotation = np.eye(3)
-        H_cam_optical_2_point[:3, :3] = np.eye(3)
 
     print(t_cam_optical_2_point)
     points_2d = cv2.projectPoints(t_cam_optical_2_point, np.eye(3), np.zeros(3), camera_matrix, distortion_coefficients)
@@ -334,18 +321,18 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
         rotation_matrix = R.from_euler('z', 90, degrees=True).as_matrix()
         vertices = np.dot(vertices, rotation_matrix)
         points_3d = np.dot(points_3d, rotation_matrix)
-        translation_vector = np.array([0, 0.05, 0])
+        translation_vector = np.array([0.3, 0.3, 0])
         vertices -= translation_vector
         points_3d -= translation_vector
 
     if selected_path["obj_path"] == '/home/eventcamera/data/KLT/obj_000003.ply':
         #translation_vector = np.array([0.1, -0.1, 0])
-        translation_vector = np.array([-0.05, 0, 0])
+        translation_vector = np.array([0.05, -0.05, 0])
         vertices -= translation_vector
         points_3d -= translation_vector
 
     if selected_path["obj_path"] == '/home/eventcamera/data/KLT/zivid.ply':
-        translation_vector = np.array([0, 0, 0.03])
+        translation_vector = np.array([0, 0, 0])
         #translation_vector = np.array([0, 0.05, 0])
         vertices -= translation_vector
         points_3d -= translation_vector
@@ -362,20 +349,27 @@ for (kr, vr), (k, v) in zip(rotations_with_timestamps.items(), translations_with
     zmax = np.max(klt_3d_transform_points[:, 2])
     Bbox = np.array([xmin, xmax, ymin, ymax, zmin, zmax])
 
-    file = os.path.join(output_dir, "bounding_box_labels.json")
-    with open(file, 'a') as json_file:
-        json.dump(Bbox.tolist(), json_file)
-        json_file.write('\n')
-
+    # Prepare the data
     rotmat = R.from_matrix(rotation)
     euler_angles = rotmat.as_euler('xyz', degrees=True)
     pose = np.concatenate((center_3d, euler_angles))
 
-    file = os.path.join(output_dir, "pose.json")
-    with open(file, 'a') as json_file:
-        json.dump(pose.tolist(), json_file)
-        json_file.write('\n')
+    # Convert numpy arrays to lists for JSON serialization
+    Bbox_list = Bbox.tolist()
+    pose_list = pose.tolist()
 
+    # Combine the data into a dictionary
+    data = {
+        "Timestamp": k,
+        "Bbox": Bbox_list,
+        "Pose": pose_list,
+        "Object": selected_path["obj_name"]
+    }
+
+    # Write the data to a JSON file
+    with open(os.path.join(output_dir, "data.json"), 'a') as file:
+        json.dump(data, file)
+        file.write('\n')
 
     klt_2d_points, _ = cv2.projectPoints(klt_3d_transform_points, np.eye(3), np.zeros(3), camera_matrix,
                                          distortion_coefficients)
